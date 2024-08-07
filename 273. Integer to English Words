@@ -1,0 +1,33 @@
+Convert a non-negative integer num to its English words representation.
+
+class Solution(object):
+    def numberToWords(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        # Dictionaries to hold number words
+        under_20 = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 
+                    'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 
+                    'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']
+        
+        tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
+        
+        thousands = ['', 'Thousand', 'Million', 'Billion']
+        
+        if num == 0:
+            return under_20[0]
+        
+        def helper(num):
+            if num < 20:
+                return under_20[num]
+            elif num < 100:
+                return tens[num // 10] + ('' if num % 10 == 0 else ' ' + under_20[num % 10])
+            elif num < 1000:
+                return under_20[num // 100] + ' Hundred' + ('' if num % 100 == 0 else ' ' + helper(num % 100))
+            else:
+                for i, word in enumerate(thousands):
+                    if num < 1000 ** (i + 1):
+                        return helper(num // (1000 ** i)) + ' ' + word + ('' if num % (1000 ** i) == 0 else ' ' + helper(num % (1000 ** i)))
+        
+        return helper(num).strip()
